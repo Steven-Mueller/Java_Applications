@@ -24,7 +24,8 @@ import java.util.Scanner;
 public class Main {
 	/*
 	 * I am using static variables to make it possible to reuse the result of the
-	 * previous calculation.
+	 * previous calculation. Btw I have to use static variables anyway because the main method is 
+	 * static and it's not possible to work with non-static variables in a static method.
 	 */
 	public static int intResult;
 	public static double doubleResult;
