@@ -79,7 +79,7 @@ public class Main {
 		System.out.print(
 				"Which operation you wanna make ?\n" + "\nOptions -> ADDITION, SUBTRACTION, DIVISION, MULTIPLICATION\n"
 						+ favouriteColor(color) + "Input: " + AnsiColors.DEFAULT.getColor());
-		operation = sc.nextLine();
+		operation = sc.nextLine().trim();
 
 		if (!CalcMethods.exists(operation)) {
 			do {
@@ -92,7 +92,12 @@ public class Main {
 			} while (!CalcMethods.exists(operation));
 		}
 
-		// TODO: Need to verify input in a method and return the correct data type
+		/* 
+		 * Couldn't find any better solution so I will use 2 data types for 
+		 * each possible outcome.
+		 */
+		int intNum1 = 0, intNum2 = 0;
+		double doubleNum1 = 0, doubleNum2 = 0;
 		boolean isValdInput = true;
 		do {
 			clearScreen();
@@ -107,18 +112,24 @@ public class Main {
 			String num2 = sc.nextLine();
 
 			try {
-				Integer.parseInt(num1);
-				Integer.parseInt(num2);
+				intNum1 = Integer.parseInt(num1);
+				intNum2 = Integer.parseInt(num2);
 				if (!isValdInput)
 					isValdInput = true;
+				if (num1.equals("0") && num2.equals("0")) {
+					System.out.println(
+							AnsiColors.RED.getColor() +"Input doesn't make sense, please try again."
+									+ AnsiColors.DEFAULT.getColor() + "\n");
+					isValdInput = false;
+				}
 			} catch (NumberFormatException e) {
 				System.out
 						.println(AnsiColors.YELLOW.getColor() + "Type mismatch, try to convert into suitable type...");
 				try {
-					Double.parseDouble(num1);
+					doubleNum1 = Double.parseDouble(num1);
 					System.out.println(AnsiColors.GREEN.getColor() + "First number successfully converted !");
 
-					Double.parseDouble(num2);
+					doubleNum2 = Double.parseDouble(num2);
 					System.out.println("Second number successfully converted !" + AnsiColors.DEFAULT.getColor());
 					
 					try {
@@ -147,8 +158,20 @@ public class Main {
 		
 		clearScreen();
 
-		System.out.println("Do more stuff...");
+		// Calculations
+		if (intNum1 != 0 && intNum2 != 0) {
+			intResult = getResult(intNum1, intNum2, operation);
+			System.out.println(intResult);
+		} else {
+			doubleResult = getResult(doubleNum1, doubleNum2, operation);
+			System.out.println(doubleResult);
+		}
 		
+		try {
+			timeToRead();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void clearScreen() {
@@ -163,5 +186,25 @@ public class Main {
 			System.out.print(i + " ");
 			Thread.sleep(1000);
 		}
+	}
+	
+	public static int getResult(int num1, int num2, String operation) {
+		return switch(operation.toUpperCase()) {
+		case "ADDITION" -> CalcMethods.addition(num1, num2);
+		case "SUBTRACTION" -> CalcMethods.subtraction(num1, num2);
+		case "MULTIPLICATION" -> CalcMethods.multiplication(num1, num2);
+		case "DIVISION" -> CalcMethods.division(num1, num2);
+		default -> 0;
+		};
+	}
+	
+	public static double getResult(double num1, double num2, String operation) {
+		return switch(operation.toUpperCase()) {
+		case "ADDITION" -> CalcMethods.addition(num1, num2);
+		case "SUBTRACTION" -> CalcMethods.subtraction(num1, num2);
+		case "MULTIPLICATION" -> CalcMethods.multiplication(num1, num2);
+		case "DIVISION" -> CalcMethods.division(num1, num2);
+		default -> 0;
+		};
 	}
 }
