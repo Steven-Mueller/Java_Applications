@@ -41,7 +41,7 @@ public class Main {
 
 	// Begin of main method
 	public static void main(String[] args) {		
-		// Create a batch file that the user can start the program in console
+		// Create a batch file for the user to start the program in console
 		File batchFile = new File("start_calc.bat");
 		try {
 			FileWriter writer = new FileWriter(batchFile);
