@@ -24,8 +24,9 @@ import java.util.Scanner;
 public class Main {
 	/*
 	 * I am using static variables to make it possible to reuse the result of the
-	 * previous calculation. Btw I have to use static variables anyway because the main method is 
-	 * static and it's not possible to work with non-static variables in a static method.
+	 * previous calculation. Btw I have to use static variables anyway because the
+	 * main method is static and it's not possible to work with non-static variables
+	 * in a static method.
 	 */
 	public static int intResult;
 	public static double doubleResult;
@@ -40,17 +41,21 @@ public class Main {
 	}
 
 	// Begin of main method
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		// Create a batch file for the user to start the program in console
 		File batchFile = new File("start_calc.bat");
-		try {
-			FileWriter writer = new FileWriter(batchFile);
-			writer.write("start java -jar calc.jar");
-			writer.close();
-		} catch (IOException e) {
-			System.out.println("Could not write file \"start_calc.bat\"");
+		if (!batchFile.exists()) {
+			try {
+				FileWriter writer = new FileWriter(batchFile);
+				writer.write("start java -jar calc.jar");
+				writer.close();
+			} catch (IOException e) {
+				System.out.println("Could not write file \"start_calc.bat\"");
+			}
+			// There is no need to execute the program any further at this point
+			return;
 		}
-		
+
 		boolean colorAccepted = false;
 		Scanner sc = new Scanner(System.in);
 
@@ -92,19 +97,19 @@ public class Main {
 			} while (!CalcMethods.exists(operation));
 		}
 
-		/* 
-		 * Couldn't find any better solution so I will use 2 data types for 
-		 * each possible outcome.
+		/*
+		 * Couldn't find any better solution so I will use 2 data types for each
+		 * possible outcome.
 		 */
 		int intNum1 = 0, intNum2 = 0;
 		double doubleNum1 = 0, doubleNum2 = 0;
 		boolean isValdInput = true;
 		do {
 			clearScreen();
-			
+
 			System.out.println(AnsiColors.GREEN.getColor() + "Chosen operation: " + AnsiColors.DEFAULT.getColor()
 					+ operation.toUpperCase() + "\n");
-			
+
 			System.out.print(favouriteColor(color) + "\nPlease enter first number: " + AnsiColors.DEFAULT.getColor());
 			String num1 = sc.nextLine();
 
@@ -117,9 +122,8 @@ public class Main {
 				if (!isValdInput)
 					isValdInput = true;
 				if (num1.equals("0") && num2.equals("0")) {
-					System.out.println(
-							AnsiColors.RED.getColor() +"Input doesn't make sense, please try again."
-									+ AnsiColors.DEFAULT.getColor() + "\n");
+					System.out.println(AnsiColors.RED.getColor() + "Input doesn't make sense, please try again."
+							+ AnsiColors.DEFAULT.getColor() + "\n");
 					isValdInput = false;
 				}
 			} catch (NumberFormatException e) {
@@ -131,7 +135,7 @@ public class Main {
 
 					doubleNum2 = Double.parseDouble(num2);
 					System.out.println("Second number successfully converted !" + AnsiColors.DEFAULT.getColor());
-					
+
 					try {
 						timeToRead();
 					} catch (InterruptedException e1) {
@@ -144,7 +148,7 @@ public class Main {
 							+ "Unable to convert input into suitable type for arithmetic operations."
 							+ AnsiColors.DEFAULT.getColor());
 					isValdInput = false;
-					
+
 					try {
 						timeToRead();
 					} catch (InterruptedException e1) {
@@ -155,7 +159,7 @@ public class Main {
 		} while (!isValdInput);
 
 		sc.close();
-		
+
 		clearScreen();
 
 		// Calculations
@@ -166,7 +170,7 @@ public class Main {
 			doubleResult = getResult(doubleNum1, doubleNum2, operation);
 			System.out.println(doubleResult);
 		}
-		
+
 		try {
 			timeToRead();
 		} catch (InterruptedException e) {
@@ -178,7 +182,7 @@ public class Main {
 		System.out.print("\033[H\033[2J");
 		System.out.flush();
 	}
-	
+
 	// Stop current thread and give the user some time to read
 	public static void timeToRead() throws InterruptedException {
 		System.out.print("\nContinue: ");
@@ -187,9 +191,9 @@ public class Main {
 			Thread.sleep(1000);
 		}
 	}
-	
+
 	public static int getResult(int num1, int num2, String operation) {
-		return switch(operation.toUpperCase()) {
+		return switch (operation.toUpperCase()) {
 		case "ADDITION" -> CalcMethods.addition(num1, num2);
 		case "SUBTRACTION" -> CalcMethods.subtraction(num1, num2);
 		case "MULTIPLICATION" -> CalcMethods.multiplication(num1, num2);
@@ -197,9 +201,9 @@ public class Main {
 		default -> 0;
 		};
 	}
-	
+
 	public static double getResult(double num1, double num2, String operation) {
-		return switch(operation.toUpperCase()) {
+		return switch (operation.toUpperCase()) {
 		case "ADDITION" -> CalcMethods.addition(num1, num2);
 		case "SUBTRACTION" -> CalcMethods.subtraction(num1, num2);
 		case "MULTIPLICATION" -> CalcMethods.multiplication(num1, num2);
