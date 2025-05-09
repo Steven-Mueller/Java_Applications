@@ -42,7 +42,35 @@ public class Main {
 
 	// Begin of main method
 	public static void main(String[] args) {
-		// Create a batch file for the user to start the program in console
+		// Check java version because 17+ is needed
+		String[] javaVersion = System.getProperty("java.version").split("\\.");
+		int jvNum = Integer.parseInt(javaVersion[0]);
+
+		String errorMessage = "Java Version below 17 detected !";
+		if (jvNum < 17) {
+			try {
+				Runtime.getRuntime().exec("cmd /c start cmd /k echo " 
+						+ AnsiColors.RED.getColor() + errorMessage + AnsiColors.DEFAULT.getColor());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		} else {
+			System.out.println(AnsiColors.GREEN.getColor() + "Java Version " 
+					+ System.getProperty("java.version") + " detected" 
+					+ AnsiColors.DEFAULT.getColor());
+		}
+
+		/*
+		 *  Create a batch file for the user to start the program in console.
+		 *  Unfortunately I could not figure out how to start my application
+		 *  in the console directly...
+		 *  
+		 *  I tried Runtime.getRuntime().exec("cmd /c start java -jar calc.jar")
+		 *  like i did for JRE check, but this created a permanent loop so idk.
+		 */
+		 
+		
 		File batchFile = new File("start_calc.bat");
 		if (!batchFile.exists()) {
 			try {
@@ -52,7 +80,6 @@ public class Main {
 			} catch (IOException e) {
 				System.out.println("Could not write file \"start_calc.bat\"");
 			}
-			// There is no need to execute the program any further at this point
 			return;
 		}
 
@@ -176,8 +203,9 @@ public class Main {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		return;
 	}
-
+	
 	public static void clearScreen() {
 		System.out.print("\033[H\033[2J");
 		System.out.flush();
